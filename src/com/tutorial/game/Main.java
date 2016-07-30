@@ -1,5 +1,8 @@
 package com.tutorial.game;
 
+import com.tutorial.game.gfx.Screen;
+import com.tutorial.game.gfx.SpriteSheet;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -14,20 +17,26 @@ public class Main extends Canvas implements Runnable {
     private boolean running = false;
 
     public static final String TITTLE = "Java 2D Game Tutorial";
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int SCALE = 3;
+    public static final int WIDTH = 800 / SCALE;
+    public static final int HEIGHT = 600 / SCALE;
 
     private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
+    private SpriteSheet sheet;
+    private Screen screen;
+
     private JFrame frame;
 
-    public Main() {
+    public Main() throws Exception {
 
-        Dimension dimension = new Dimension(WIDTH, HEIGHT);
+        Dimension dimension = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
         setPreferredSize(dimension);
         setMinimumSize(dimension);
         setMaximumSize(dimension);
+
+        init();
 
         frame = new JFrame(TITTLE);
         frame.setLayout(new BorderLayout());
@@ -38,18 +47,13 @@ public class Main extends Canvas implements Runnable {
         frame.setVisible(true);
     }
 
-    public void init() {
-
+    public void init() throws Exception {
+        sheet = new SpriteSheet("SpriteSheet.png");
+        screen = new Screen(WIDTH, HEIGHT, sheet);
     }
 
-    int updateCount = 0;
-
     public void update() {
-        updateCount++;
 
-        for (int i = 0; i < pixels.length; i++) {
-            pixels[i] = i + updateCount;
-        }
     }
 
     public void render() {
@@ -59,8 +63,17 @@ public class Main extends Canvas implements Runnable {
             return;
         }
 
-        Graphics g = bs.getDrawGraphics();
+        screen.clear(0xff00ff);
 
+        screen.render(10, 10, 31);
+
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
+                pixels[x + y * WIDTH] = screen.pixels[x + y * screen.width];
+            }
+        }
+
+        Graphics g = bs.getDrawGraphics();
         g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         g.dispose();
         bs.show();
@@ -72,7 +85,6 @@ public class Main extends Canvas implements Runnable {
 
     @Override
     public void run() {
-        init();
         double nUps = 1_000_000_000d / 60d;
         int fps = 0;
         int ups = 0;
@@ -109,6 +121,10 @@ public class Main extends Canvas implements Runnable {
     }
 
     public static void main(String arg[]) {
-        new Main().start();
+        try {
+            new Main().start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
