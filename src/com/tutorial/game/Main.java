@@ -26,6 +26,8 @@ public class Main extends Canvas implements Runnable {
 
     private SpriteSheet sheet;
     private Screen screen;
+    private  InputHandler key;
+
 
     private JFrame frame;
 
@@ -50,10 +52,20 @@ public class Main extends Canvas implements Runnable {
     public void init() throws Exception {
         sheet = new SpriteSheet("SpriteSheet.png");
         screen = new Screen(WIDTH, HEIGHT, sheet);
+        key = new InputHandler(this);
     }
 
-    public void update() {
+    int x, y;
 
+    public void update() {
+        if(key.up.isDown())
+            y--;
+        if(key.down.isDown())
+            y++;
+        if(key.left.isDown())
+            x--;
+        if(key.right.isDown())
+            x++;
     }
 
     public void render() {
@@ -65,7 +77,7 @@ public class Main extends Canvas implements Runnable {
 
         screen.clear(0xff00ff);
 
-        screen.render(10, 10, 31);
+        screen.render(x, y, 31);
 
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
