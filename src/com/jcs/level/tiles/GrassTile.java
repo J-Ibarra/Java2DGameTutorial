@@ -45,6 +45,7 @@ public class GrassTile extends Tile {
             screen.render(x * 16 + 0, y * 16 + 8, 2 + TilesIndex.basic, col);
         } else
             screen.render(x * 16 + 0, y * 16 + 8, (l ? x0 : x1) + (d ? y2 : y1) * 32, transitionColor);
+
         if (!d && !r) {
             screen.render(x * 16 + 8, y * 16 + 8, 3 + TilesIndex.basic, col);
         } else

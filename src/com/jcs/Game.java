@@ -49,7 +49,7 @@ public class Game extends Canvas implements Runnable {
         sheet = new SpriteSheet("SpriteSheet.png");
         screen = new Screen(WIDTH, HEIGHT, sheet);
 
-        level = new Level(512, 512, 512);
+        level = new Level(512, 512, 32);
         player = new Player(this, key);
         player.x = 20;
         player.y = 20;
@@ -137,7 +137,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - lastTimer >= 1000) {
                 lastTimer += 1000;
-                System.out.println("Ups: " + ticks + ", Fps: " + frames);
+                //System.out.println("Ups: " + ticks + ", Fps: " + frames);
                 ticks = frames = 0;
             }
         }
